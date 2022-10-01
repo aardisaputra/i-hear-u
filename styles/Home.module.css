@@ -127,3 +127,7 @@
     filter: invert(1);
   }
 }
+
+.white {
+  color: white;
+}

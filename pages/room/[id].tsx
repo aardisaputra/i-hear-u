@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
+import CopyLink from "../../components/CopyLink";
 
 const GamePage: NextPage = () => {
   const router = useRouter();
@@ -45,6 +46,7 @@ const GamePage: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <CopyLink />
         <h1 className={styles.title}>Participants</h1>
         <Box
           display="flex"
