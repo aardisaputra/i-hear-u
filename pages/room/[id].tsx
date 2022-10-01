@@ -39,13 +39,13 @@ const GamePage: NextPage = () => {
   return loaded ? (
     <div className={styles.container}>
       <Head>
-        <title>{id}</title>
+        <title>iHearU</title>
         <meta name="description" content="MIT Hacks 2022" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>I {id} U!</h1>
+        <h1 className={styles.title}>Participants</h1>
         <Box
           display="flex"
           justifyContent="center"
