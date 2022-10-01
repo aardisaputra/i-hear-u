@@ -16,7 +16,7 @@ const CopyLink: NextComponentType = () => {
   const [copied, setCopied] = useState(false);
 
   const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(window.location.href.split("?")[0]);
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
@@ -30,7 +30,7 @@ const CopyLink: NextComponentType = () => {
         variant="outlined"
         size="small"
         inputProps={{ readOnly: true }}
-        value={window.location.href}
+        value={window.location.href.split("?")[0]}
         onClick={copyLink}
       />
       <Button onClick={copyLink}>{copied ? "Copied!" : "Copy Link"}</Button>

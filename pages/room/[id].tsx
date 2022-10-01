@@ -28,7 +28,7 @@ const GamePage: NextPage = () => {
       return;
     }
     if (typeof user !== "string" || user === undefined) {
-      router.push("/auth?redirect=" + window.location.href);
+      router.push("/auth?redirect=" + window.location.href.split("?")[0]);
     }
     onSnapshot(doc(db, "game", String(id)), (doc) => {
       const data = doc.data();
