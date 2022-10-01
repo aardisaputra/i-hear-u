@@ -7,13 +7,36 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { db } from "../../firebase/clientApp";
+import { doc, getDoc } from "firebase/firestore";
 
-const Home: NextPage = () => {
+const GamePage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  return (
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (typeof id !== "string" || id === undefined) {
+      return;
+    }
+    const fetchData = async () => {
+      console.log("id", String(id));
+      const docRef = doc(db, "game", String(id));
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        setLoaded(true);
+      } else {
+        console.log("not exist");
+        router.push("/");
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  return loaded ? (
     <div className={styles.container}>
       <Head>
         <title>{id}</title>
@@ -31,7 +54,9 @@ const Home: NextPage = () => {
         ></Box>
       </main>
     </div>
+  ) : (
+    <></>
   );
 };
 
-export default Home;
+export default GamePage;
