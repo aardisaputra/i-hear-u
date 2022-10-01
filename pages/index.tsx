@@ -9,9 +9,15 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Router from "next/router";
-
-const createRoom = () => {
-  Router.push("/room/123");
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase/clientApp";
+const createRoom = async () => {
+  const docRef = await addDoc(collection(db, "game"), {
+    users: {},
+    questions: {},
+    results: {},
+  });
+  Router.push(`/room/${docRef.id}`);
 };
 
 const Home: NextPage = () => {
