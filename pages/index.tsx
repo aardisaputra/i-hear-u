@@ -13,6 +13,7 @@ const createRoom = async () => {
   //   users: {},
   //   questions: {},
   //   results: {},
+  //   state: 0,
   // });
   // Router.push(`/room/${docRef.id}`);
 

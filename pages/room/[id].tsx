@@ -2,20 +2,13 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import { CacheProvider, EmotionCache } from "@emotion/react";
-import { Icon } from "@iconify/react";
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/clientApp";
-import {
-  doc,
-  DocumentData,
-  getDoc,
-  onSnapshot,
-  setDoc,
-} from "firebase/firestore";
+import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore";
 import CopyLink from "../../components/CopyLink";
-import { Button, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 
 const GamePage: NextPage = () => {
   const router = useRouter();
@@ -32,14 +25,9 @@ const GamePage: NextPage = () => {
     }
     onSnapshot(doc(db, "game", String(id)), (doc) => {
       const data = doc.data();
-      console.log("data: ", data);
       setData(data);
       if (data) {
         setUsers(Object.fromEntries(Object.entries(data!.users).sort()));
-        console.log(
-          "data: ",
-          Object.fromEntries(Object.entries(data!.users).sort())
-        );
       }
     });
   }, [id]);
@@ -47,10 +35,19 @@ const GamePage: NextPage = () => {
   const toggleReady = () => {
     if (!user) return;
     const updatedUser = { ...users[user], ready: !users[user].ready };
-
+    const updatedUsers = { ...users, [user]: updatedUser };
+    if (Object.values(updatedUsers).every((user) => user.ready)) {
+      // all players are ready
+      setDoc(
+        doc(db, "game", String(id)),
+        { ...data, users: updatedUsers, state: 1 },
+        { merge: true }
+      );
+      return;
+    }
     setDoc(
       doc(db, "game", String(id)),
-      { ...data, users: { ...users, [user]: updatedUser } },
+      { ...data, users: updatedUsers },
       { merge: true }
     );
   };
@@ -63,20 +60,26 @@ const GamePage: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <CopyLink />
-        <h1 className="text-3xl m-3">Participants</h1>
-        <div className="flex flex-col gap-3 m-2 items-center">
-          {Object.entries(users).map(([id, u]) => {
-            return (
-              <div key={id}>
-                {u.name}
-                {user === id ? " (You)" : ""}
-                {u.ready ? " ✅" : ""}
-              </div>
-            );
-          })}
-        </div>
-        <Button onClick={toggleReady}>I&apos;m ready!</Button>
+        {data.state === 0 ? (
+          <>
+            <CopyLink />
+            <h1 className="text-3xl m-3">Participants</h1>
+            <div className="flex flex-col gap-3 m-2 items-center">
+              {Object.entries(users).map(([id, u]) => {
+                return (
+                  <div key={id}>
+                    {u.name}
+                    {user === id ? " (You)" : ""}
+                    {u.ready ? " ✅" : ""}
+                  </div>
+                );
+              })}
+            </div>
+            <Button onClick={toggleReady}>I&apos;m ready!</Button>
+          </>
+        ) : (
+          <>Game Started</>
+        )}
       </main>
     </div>
   ) : (
