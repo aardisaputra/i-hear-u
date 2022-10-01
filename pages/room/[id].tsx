@@ -1,43 +1,60 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../../styles/Home.module.css";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import { Icon } from "@iconify/react";
 
-import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/clientApp";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  getDoc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
 import CopyLink from "../../components/CopyLink";
+import { Button, IconButton } from "@mui/material";
 
 const GamePage: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const [loaded, setLoaded] = useState(false);
+  const { id, user } = router.query;
+  const [data, setData] = useState<DocumentData | null | undefined>(null);
+  const [users, setUsers] = useState({});
 
   useEffect(() => {
     if (typeof id !== "string" || id === undefined) {
       return;
     }
-    const fetchData = async () => {
-      console.log("id", String(id));
-      const docRef = doc(db, "game", String(id));
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-        setLoaded(true);
-      } else {
-        console.log("not exist");
-        router.push("/");
+    if (typeof user !== "string" || user === undefined) {
+      router.push("/auth?redirect=" + window.location.href);
+    }
+    onSnapshot(doc(db, "game", String(id)), (doc) => {
+      const data = doc.data();
+      console.log("data: ", data);
+      setData(data);
+      if (data) {
+        setUsers(Object.fromEntries(Object.entries(data!.users).sort()));
+        console.log(
+          "data: ",
+          Object.fromEntries(Object.entries(data!.users).sort())
+        );
       }
-    };
-    fetchData();
+    });
   }, [id]);
 
-  return loaded ? (
+  const toggleReady = () => {
+    if (!user) return;
+    const updatedUser = { ...users[user], ready: !users[user].ready };
+
+    setDoc(
+      doc(db, "game", String(id)),
+      { ...data, users: { ...users, [user]: updatedUser } },
+      { merge: true }
+    );
+  };
+  return data !== null ? (
     <div className={styles.container}>
       <Head>
         <title>iHearU</title>
@@ -47,13 +64,19 @@ const GamePage: NextPage = () => {
 
       <main className={styles.main}>
         <CopyLink />
-        <h1 className={styles.title}>Participants</h1>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="15vh"
-        ></Box>
+        <h1 className="text-3xl m-3">Participants</h1>
+        <div className="flex flex-col gap-3 m-2 items-center">
+          {Object.entries(users).map(([id, u]) => {
+            return (
+              <div key={id}>
+                {u.name}
+                {user === id ? " (You)" : ""}
+                {u.ready ? " ✅" : ""}
+              </div>
+            );
+          })}
+        </div>
+        <Button onClick={toggleReady}>I&apos;m ready!</Button>
       </main>
     </div>
   ) : (

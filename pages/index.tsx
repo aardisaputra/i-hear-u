@@ -9,12 +9,14 @@ import Router from "next/router";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/clientApp";
 const createRoom = async () => {
-  const docRef = await addDoc(collection(db, "game"), {
-    users: {},
-    questions: {},
-    results: {},
-  });
-  Router.push(`/room/${docRef.id}`);
+  // const docRef = await addDoc(collection(db, "game"), {
+  //   users: {},
+  //   questions: {},
+  //   results: {},
+  // });
+  // Router.push(`/room/${docRef.id}`);
+
+  Router.push("/room/BpR8tiltGitkbHgAP4NT");
 };
 
 const Home: NextPage = () => {
