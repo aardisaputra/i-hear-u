@@ -31,7 +31,7 @@ const Home: NextPage = () => {
           alignItems="center"
           minHeight="15vh"
         >
-          <Button size="x-large" variant="outlined" onClick={createRoom}>
+          <Button size="large" variant="outlined" onClick={createRoom}>
             START
           </Button>
         </Box>
