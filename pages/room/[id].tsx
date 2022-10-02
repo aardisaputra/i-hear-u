@@ -9,6 +9,9 @@ import { db } from "../../firebase/clientApp";
 import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore";
 import CopyLink from "../../components/CopyLink";
 import { Button } from "@mui/material";
+import Participants from "../../components/participants";
+import Results from "../../components/results";
+import Questions from "../../components/questions";
 
 const GamePage: NextPage = () => {
   const router = useRouter();
@@ -58,7 +61,6 @@ const GamePage: NextPage = () => {
         <meta name="description" content="MIT Hacks 2022" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
         {data.state === 0 ? (
           <>
