@@ -64,26 +64,9 @@ const GamePage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {data.state === 0 ? (
-          <>
-            <CopyLink />
-            <h1 className="text-3xl m-3">Participants</h1>
-            <div className="flex flex-col gap-3 m-2 items-center">
-              {Object.entries(users).map(([id, u]) => {
-                return (
-                  <div key={id}>
-                    {u.name}
-                    {user === id ? " (You)" : ""}
-                    {u.ready ? " ✅" : ""}
-                  </div>
-                );
-              })}
-            </div>
-            <Button onClick={toggleReady}>I&apos;m ready!</Button>
-          </>
-        ) : (
-          <>Game Started</>
-        )}
+        {data.state === 0 ? <Participants /> : <></> }
+        {data.state === 1 ? <Questions /> : <></> }
+        {data.state === 2 ? <Results /> : <></> }
       </main>
     </div>
   ) : (
