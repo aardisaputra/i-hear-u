@@ -64,9 +64,9 @@ const GamePage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {data.state === 0 ? <Participants /> : <></> }
-        {data.state === 1 ? <Questions /> : <></> }
-        {data.state === 2 ? <Results /> : <></> }
+        {data.state === 0 ? <Participants /> : <></>}
+        {data.state === 1 ? <Questions /> : <></>}
+        {data.state === 2 ? <Results /> : <></>}
       </main>
     </div>
   ) : (
