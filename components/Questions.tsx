@@ -42,8 +42,7 @@ const Home: NextPage = ({
           justifyContent="center"
           alignItems="center"
           minHeight="5vh"
-        >
-        </Box>
+        ></Box>
         <Box
           display="flex"
           justifyContent="center"
@@ -61,8 +60,7 @@ const Home: NextPage = ({
           justifyContent="center"
           alignItems="center"
           minHeight="10vh"
-        >
-        </Box>
+        ></Box>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={6}>
             {answered && (
@@ -115,6 +113,7 @@ const Home: NextPage = ({
             display="flex"
             justifyContent="center"
             alignItems="center"
+            flexDirection="column"
             minHeight="12vh"
           >
             <h3>Leaderboard</h3>
