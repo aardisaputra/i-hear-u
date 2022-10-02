@@ -27,28 +27,35 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Who loves this song the most?</h1>
+        <h1 className={styles.title}>Who loves this song the most? 🤔</h1>
         <h2> One Republic - Counting Stars</h2>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="12vh"
+        >
+        </Box>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={10}>
-            <Grid item xs={8}>
-              <Button size="large" variant="outlined">
-                First
+            <Grid item xs={6}>
+              <Button size="large" variant="outlined" className="text-4xl w-full">
+                Austin
               </Button>
             </Grid>
-            <Grid item xs={4}>
-              <Button size="large" variant="outlined">
-                Second
+            <Grid item xs={6}>
+              <Button size="large" variant="outlined" className="text-4xl w-full">
+                Austin
               </Button>
             </Grid>
-            <Grid item xs={8}>
-              <Button size="large" variant="outlined">
-                Third
+            <Grid item xs={6}>
+              <Button size="large" variant="outlined" className="text-4xl w-full">
+                Austin
               </Button>
             </Grid>
-            <Grid item xs={4}>
-              <Button size="large" variant="outlined">
-                Fourth
+            <Grid item xs={6}>
+              <Button size="large" variant="outlined" className="text-4xl w-full">
+                Austin
               </Button>
             </Grid>
           </Grid>

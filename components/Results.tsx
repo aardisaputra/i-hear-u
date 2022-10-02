@@ -45,7 +45,47 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Congrats!</h1>
+        <h1 className={styles.title}>Game Finished! Congrats 🎉</h1>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="8vh"
+        ></Box>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 850 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Ranking</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="right">Stats</TableCell>
+                <TableCell align="right">Total Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow
+                  key={row.rank}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.rank}
+                  </TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="right">{row.qs}</TableCell>
+                  <TableCell align="right">{row.score}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="8vh"
+        ></Box>
+        <h1 className={styles.title}>Top 3 Fav Artists from Y'all!</h1>
         <Box
           display="flex"
           justifyContent="center"
