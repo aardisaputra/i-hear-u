@@ -123,7 +123,7 @@ const GamePage: NextPage = () => {
             answerCallback={answerCallback}
           />
         )}
-        {state === 2 && <Results />}
+        {state === 2 && <Results id={id} />}
       </main>
     </div>
   ) : (
