@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import Router from "next/router";
 import { Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const createRoom = () => {
   Router.push("/room/123");
@@ -19,6 +19,9 @@ const createRoom = () => {
 
 const Home: NextPage = ({ question, answer, users, answerCallback }) => {
   const [answered, setAnswered] = useState("");
+  useEffect(() => setAnswered(""), [question]);
+
+  useEffect(() => {});
   return (
     <div className={styles.container}>
       <Head>
@@ -29,7 +32,7 @@ const Home: NextPage = ({ question, answer, users, answerCallback }) => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Who loves this song the most? 🤔</h1>
-        <h2> One Republic - Counting Stars {question}</h2>
+        <h2>{question}</h2>
         <Box
           display="flex"
           justifyContent="center"
