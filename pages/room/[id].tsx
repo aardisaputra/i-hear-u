@@ -24,7 +24,9 @@ const GamePage: NextPage = () => {
       return;
     }
     if (!window.location.href.includes("user=")) {
-      window.location.replace("http://localhost:3001");
+      window.location.replace(
+        "https://us-central1-i-hear-u.cloudfunctions.net/auth"
+      );
     }
     onSnapshot(doc(db, "game", String(id)), (doc) => {
       const data = doc.data();

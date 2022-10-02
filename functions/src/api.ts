@@ -42,61 +42,63 @@ router.get("/callback", async (req: any, res: any) => {
     json: true,
   };
 
-  request.post(authOptions, function (error: any, response: any, body: any) {
-    console.log(response.statusCode);
-    if (!error && response.statusCode === 200) {
-      var access_token = body.access_token,
-        refresh_token = body.refresh_token;
+  request.post(
+    authOptions,
+    async function (error: any, response: any, body: any) {
+      var profile: any;
+      if (!error && response.statusCode === 200) {
+        var access_token = body.access_token;
 
-      function getProfile() {
-        return new Promise(function (resolve, reject) {
+        async function getProfile() {
           var options = {
             url: "https://api.spotify.com/v1/me",
             headers: { Authorization: "Bearer " + access_token },
             json: true,
           };
+          await request.get(
+            options,
+            function (error: any, response: any, body: any) {
+              profile = body;
+              console.log(profile.id);
+            }
+          );
+        }
 
-          request.get(options, function (error: any, response: any, body: any) {
-            console.log(body);
-            resolve(response);
-          });
-        });
+        async function getSongs() {
+          var options = {
+            url: "https://api.spotify.com/v1/me/top/tracks",
+            headers: { Authorization: "Bearer " + access_token },
+            json: true,
+          };
+          await request.get(
+            options,
+            function (error: any, response: any, body: any) {
+              console.log("test2");
+              goBack();
+            }
+          );
+        }
+
+        async function goBack() {
+          res.redirect(
+            "http://localhost:3000/room/BpR8tiltGitkbHgAP4NT?user=" + profile.id
+          );
+        }
+
+        await getProfile();
+        await getSongs();
+
+        // we can also pass the token to the browser to make requests from there
+      } else {
+        res.redirect(
+          "/#" +
+            querystring.stringify({
+              error: "invalid_token",
+            })
+        );
       }
-
-      var options = {
-        url: "https://api.spotify.com/v1/me/top/tracks",
-        headers: { Authorization: "Bearer " + access_token },
-        json: true,
-      };
-
-      getProfile().then(() => {
-        request.get(options, function (error: any, response: any, body: any) {
-          console.log(body);
-        });
-      });
-
-      // use the access token to access the Spotify Web API
-      request.get(options, function (error: any, response: any, body: any) {
-        console.log(body);
-      });
-
-      // redirect up to auth
-      res.redirect(
-        "/#" +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token,
-          })
-      );
-    } else {
-      res.redirect(
-        "/#" +
-          querystring.stringify({
-            error: "invalid_token",
-          })
-      );
     }
-  });
+  );
 });
 
 module.exports = router;
