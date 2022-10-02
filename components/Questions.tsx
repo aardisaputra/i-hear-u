@@ -17,7 +17,11 @@ const createRoom = () => {
   Router.push("/room/123");
 };
 
-const Home: NextPage = ({ question, answer, users, answerCallback }) => {
+const Home: NextPage = ({
+  item: { question, answer, preview, img },
+  users,
+  answerCallback,
+}) => {
   const [answered, setAnswered] = useState("");
   useEffect(() => setAnswered(""), [question]);
 
@@ -38,7 +42,13 @@ const Home: NextPage = ({ question, answer, users, answerCallback }) => {
           justifyContent="center"
           alignItems="center"
           minHeight="12vh"
-        ></Box>
+        >
+          <Image width="150px" height="150px" src={img} alt="cover_img" />
+          <audio controls autoPlay key={preview}>
+            <source src={preview} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </Box>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={10}>
             {answered && (

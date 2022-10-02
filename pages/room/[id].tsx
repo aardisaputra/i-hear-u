@@ -44,7 +44,7 @@ const GamePage: NextPage = () => {
   }, [id]);
 
   const nextQuestion = () => {
-    if (currentQuestion + 1 < questions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setDoc(
         doc(db, "game", String(id)),
         { ...data, currentQuestion: currentQuestion + 1 },
@@ -118,8 +118,7 @@ const GamePage: NextPage = () => {
         )}
         {state === 1 && (
           <Questions
-            question={questions ? questions[currentQuestion].question : null}
-            answer={questions ? questions[currentQuestion].answer : null}
+            item={questions ? questions[currentQuestion] : null}
             users={users}
             answerCallback={answerCallback}
           />
