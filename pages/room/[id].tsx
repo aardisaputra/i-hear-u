@@ -1,14 +1,10 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import styles from "../../styles/Home.module.css";
-import { CacheProvider, EmotionCache } from "@emotion/react";
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/clientApp";
 import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore";
-import CopyLink from "../../components/CopyLink";
-import { Button } from "@mui/material";
 import Participants from "../../components/participants";
 import Results from "../../components/results";
 import Questions from "../../components/questions";
@@ -107,11 +103,6 @@ const GamePage: NextPage = () => {
   };
   return data !== null ? (
     <div className={styles.container}>
-      <Head>
-        <title>iHearU</title>
-        <meta name="description" content="MIT Hacks 2022" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <main className={styles.main}>
         {state === 0 && (
           <Participants users={users} user={user} toggleReady={toggleReady} />

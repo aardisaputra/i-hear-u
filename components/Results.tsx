@@ -1,15 +1,7 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import type { NextComponentType, NextPage } from "next";
 import styles from "../styles/Home.module.css";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { CacheProvider, EmotionCache } from "@emotion/react";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Router from "next/router";
-import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,10 +10,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { db } from "../firebase/clientApp";
-import { doc, DocumentData, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, DocumentData, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-function ordinal_suffix_of(i) {
+function ordinal_suffix_of(i: number) {
   var j = i % 10,
     k = i % 100;
   if (j == 1 && k != 11) {
@@ -36,7 +28,11 @@ function ordinal_suffix_of(i) {
   return i + "th";
 }
 
-const Results: NextPage = ({ id }) => {
+type Props = {
+  id: string;
+};
+
+const Results: NextComponentType<Props> = ({ id }) => {
   const [data, setData] = useState<DocumentData | null | undefined>(null);
   const [rankings, setRankings] = useState([]);
   const [topArtists, setTopArtists] = useState([]);

@@ -1,39 +1,26 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { NextComponentType, NextPage } from "next";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { CacheProvider, EmotionCache } from "@emotion/react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Router from "next/router";
-import { Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useState, useEffect } from "react";
 
-const createRoom = () => {
-  Router.push("/room/123");
+type Props = {
+  items: { question: string; answer: string; preview: string; img: string };
+  users: Record<string, string | number | boolean>;
+  answerCallback: (correct: boolean) => void;
 };
-
-const Home: NextPage = ({
+const Questions: NextComponentType<Props> = ({
   item: { question, answer, preview, img },
   users,
   answerCallback,
 }) => {
   const [answered, setAnswered] = useState("");
   useEffect(() => setAnswered(""), [question]);
-
-  useEffect(() => {});
   return (
     <div className={styles.container}>
-      <Head>
-        <title>I Hear U</title>
-        <meta name="description" content="MIT Hacks 2022" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main className={styles.main}>
         <h1 className={styles.title}>Who loves this song the most? 🤔</h1>
         <p className="text-2xl">{question}</p>
@@ -90,7 +77,6 @@ const Home: NextPage = ({
             {!answered &&
               Object.entries(users).map(([id, u]) => (
                 <Grid item xs={6} key={id}>
-                  {/* {!!answered && <span>You answered: </span>} */}
                   <Button
                     size="large"
                     variant="outlined"
@@ -123,9 +109,9 @@ const Home: NextPage = ({
               )
               .map(([key, value]) => {
                 return (
-                  <div key={key}>
+                  <p key={key}>
                     {value.name} - {value.score}
-                  </div>
+                  </p>
                 );
               })}
           </Box>
@@ -135,4 +121,4 @@ const Home: NextPage = ({
   );
 };
 
-export default Home;
+export default Questions;

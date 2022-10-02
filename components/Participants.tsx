@@ -1,20 +1,29 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import type { NextComponentType } from "next";
 import styles from "../styles/Home.module.css";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { CacheProvider, ClassNames, EmotionCache } from "@emotion/react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Router from "next/router";
 import CopyLink from "./CopyLink";
-import { userAgent } from "next/server";
+type Props = {
+  user: string;
+  users: Record<string, string | number | boolean>;
+  toggleReady: () => {};
+};
 
-const Home: NextPage = ({ user, users, toggleReady }) => {
+const Participants: NextComponentType<Props> = ({
+  user,
+  users,
+  toggleReady,
+}) => {
   return (
     <>
+      <CopyLink />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="10vh"
+      ></Box>
       <h1 className={styles.title}>Participants 🙋‍♀️</h1>
       <Box
         display="flex"
@@ -22,7 +31,6 @@ const Home: NextPage = ({ user, users, toggleReady }) => {
         alignItems="center"
         minHeight="10vh"
       ></Box>
-      <CopyLink />
       <div className="flex flex-col gap-3 m-2 items-center">
         {Object.entries(users).map(([id, u]) => {
           return (
@@ -42,4 +50,4 @@ const Home: NextPage = ({ user, users, toggleReady }) => {
   );
 };
 
-export default Home;
+export default Participants;
