@@ -36,7 +36,14 @@ const Home: NextPage = ({
 
       <main className={styles.main}>
         <h1 className={styles.title}>Who loves this song the most? 🤔</h1>
-        <h2>{question}</h2>
+        <p className="text-2xl">{question}</p>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="5vh"
+        >
+        </Box>
         <Box
           display="flex"
           justifyContent="center"
@@ -49,8 +56,15 @@ const Home: NextPage = ({
             Your browser does not support the audio element.
           </audio>
         </Box>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="10vh"
+        >
+        </Box>
         <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={10}>
+          <Grid container spacing={6}>
             {answered && (
               <>
                 <Grid item xs={6}>
