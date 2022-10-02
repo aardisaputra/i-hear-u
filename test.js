@@ -42,47 +42,46 @@ router.get("/callback", function (req, res) {
     json: true,
   };
 
-  request.post(authOptions, function (error, response, body) {
-    console.log(response.statusCode);
+  request.post(authOptions, async function (error, response, body) {
+    var profile = {};
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token,
         refresh_token = body.refresh_token;
 
-      function getProfile() {
-        return new Promise(function (resolve, reject) {
-          var options = {
-            url: "https://api.spotify.com/v1/me",
-            headers: { Authorization: "Bearer " + access_token },
-            json: true,
-          };
-
-          request.get(options, function (error, response, body) {
-            console.log(body);
-            resolve(response);
-          });
+      async function getProfile() {
+        var options = {
+          url: "https://api.spotify.com/v1/me",
+          headers: { Authorization: "Bearer " + access_token },
+          json: true,
+        };
+        await request.get(options, function (error, response, body) {
+          profile = body;
+          console.log(profile.id);
         });
       }
 
-      var options = {
-        url: "https://api.spotify.com/v1/me/top/tracks",
-        headers: { Authorization: "Bearer " + access_token },
-        json: true,
-      };
-
-      getProfile().then(() => {
-        request.get(options, function (error, response, body) {
-          console.log(body);
+      async function getSongs() {
+        var options = {
+          url: "https://api.spotify.com/v1/me/top/tracks",
+          headers: { Authorization: "Bearer " + access_token },
+          json: true,
+        };
+        await request.get(options, function (error, response, body) {
+          console.log("test2");
+          goBack();
         });
-      });
+      }
+
+      async function goBack() {
+        res.redirect(
+          "http://localhost:3000/room/BpR8tiltGitkbHgAP4NT?user=" + profile.id
+        );
+      }
+
+      await getProfile();
+      await getSongs();
 
       // we can also pass the token to the browser to make requests from there
-      res.redirect(
-        "/#" +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token,
-          })
-      );
     } else {
       res.redirect(
         "/#" +

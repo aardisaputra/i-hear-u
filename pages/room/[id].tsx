@@ -20,8 +20,8 @@ const GamePage: NextPage = () => {
     if (typeof id !== "string" || id === undefined) {
       return;
     }
-    if (typeof user !== "string" || user === undefined) {
-      router.push("/auth?redirect=" + window.location.href.split("?")[0]);
+    if (!window.location.href.includes("user=")) {
+      window.location.replace("http://localhost:3001");
     }
     onSnapshot(doc(db, "game", String(id)), (doc) => {
       const data = doc.data();
