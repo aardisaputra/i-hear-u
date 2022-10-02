@@ -10,14 +10,15 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Router from "next/router";
 import { Container } from "@mui/material";
-import Grid from '@mui/material/Grid';
-
+import Grid from "@mui/material/Grid";
+import { useState } from "react";
 
 const createRoom = () => {
   Router.push("/room/123");
 };
 
-const Home: NextPage = () => {
+const Home: NextPage = ({ question, answer, users, answerCallback }) => {
+  const [answered, setAnswered] = useState("");
   return (
     <div className={styles.container}>
       <Head>
@@ -28,38 +29,81 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Who loves this song the most? 🤔</h1>
-        <h2> One Republic - Counting Stars</h2>
+        <h2> One Republic - Counting Stars {question}</h2>
         <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
           minHeight="12vh"
-        >
-        </Box>
+        ></Box>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={10}>
-            <Grid item xs={6}>
-              <Button size="large" variant="outlined" className="text-4xl w-full">
-                Austin
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button size="large" variant="outlined" className="text-4xl w-full">
-                Austin
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button size="large" variant="outlined" className="text-4xl w-full">
-                Austin
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button size="large" variant="outlined" className="text-4xl w-full">
-                Austin
-              </Button>
-            </Grid>
+            {answered && (
+              <>
+                <Grid item xs={6}>
+                  <span>The correct answer is: </span>
+                  <Button
+                    size="large"
+                    variant="outlined"
+                    className="text-4xl w-full"
+                  >
+                    {answer} ✅
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <span>You answered: </span>
+                  <Button
+                    size="large"
+                    variant="outlined"
+                    className="text-4xl w-full"
+                  >
+                    {answered} {answer === answered ? "✅" : "❌"}
+                  </Button>
+                </Grid>
+              </>
+            )}
+            {!answered &&
+              Object.entries(users).map(([id, u]) => (
+                <Grid item xs={6} key={id}>
+                  {/* {!!answered && <span>You answered: </span>} */}
+                  <Button
+                    size="large"
+                    variant="outlined"
+                    className="text-4xl w-full"
+                    onClick={() => {
+                      answerCallback(u.name === answer);
+                      setAnswered(u.name);
+                    }}
+                    disabled={!!answered}
+                  >
+                    {u.name}
+                    {!!answered ? (u.name === answer ? "✅" : "❌") : ""}
+                  </Button>
+                </Grid>
+              ))}
           </Grid>
         </Box>
+        {answered && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="12vh"
+          >
+            <h3>Leaderboard</h3>
+            {Object.entries(users)
+              .sort(
+                ([key1, value1], [key2, value2]) => value2.score - value1.score
+              )
+              .map(([key, value]) => {
+                return (
+                  <div key={key}>
+                    {value.name} - {value.score}
+                  </div>
+                );
+              })}
+          </Box>
+        )}
       </main>
     </div>
   );
