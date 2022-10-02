@@ -18,6 +18,7 @@ const GamePage: NextPage = () => {
   const { id, user } = router.query;
   const [data, setData] = useState<DocumentData | null | undefined>(null);
   const [users, setUsers] = useState({});
+  const [state, setState] = useState(0);
   const [questions, setQuestions] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
@@ -36,25 +37,48 @@ const GamePage: NextPage = () => {
       if (data) {
         setUsers(Object.fromEntries(Object.entries(data!.users).sort()));
         setQuestions(Object.values(data!.questions));
+        setState(data!.state);
+        setCurrentQuestion(data!.currentQuestion);
       }
     });
   }, [id]);
 
   const nextQuestion = () => {
-    if (currentQuestion + 1 < questions.length() - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    }
-  };
-  const answerCallback = (correct) => {
-    if (correct) {
-      const updatedUser = { ...users[user], score: users[user].score + 1 };
-      const updatedUsers = { ...users, [user]: updatedUser };
+    if (currentQuestion + 1 < questions.length - 1) {
       setDoc(
         doc(db, "game", String(id)),
-        { ...data, users: updatedUsers },
+        { ...data, currentQuestion: currentQuestion + 1 },
+        { merge: true }
+      );
+    } else {
+      setDoc(
+        doc(db, "game", String(id)),
+        { ...data, state: 2 },
         { merge: true }
       );
     }
+  };
+  const answerCallback = (correct) => {
+    const newScore = correct ? users[user].score + 1 : users[user].score;
+    const updatedUser = { ...users[user], score: newScore, ready: true };
+    let updatedUsers = { ...users, [user]: updatedUser };
+
+    if (Object.values(updatedUsers).every((user) => user.ready)) {
+      // all players are ready
+      updatedUsers = Object.fromEntries(
+        Object.entries(users).map(([key, value]) => {
+          return [key, { ...value, ready: false }];
+        })
+      );
+      setTimeout(() => {
+        nextQuestion();
+      }, 3000);
+    }
+    setDoc(
+      doc(db, "game", String(id)),
+      { ...data, users: updatedUsers },
+      { merge: true }
+    );
   };
 
   const toggleReady = () => {
@@ -89,22 +113,18 @@ const GamePage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {data.state === 0 ? (
+        {state === 0 && (
           <Participants users={users} user={user} toggleReady={toggleReady} />
-        ) : (
-          <></>
         )}
-        {data.state === 1 ? (
+        {state === 1 && (
           <Questions
             question={questions ? questions[currentQuestion].question : null}
             answer={questions ? questions[currentQuestion].answer : null}
             users={users}
             answerCallback={answerCallback}
           />
-        ) : (
-          <></>
         )}
-        {data.state === 2 ? <Results /> : <></>}
+        {state === 2 && <Results />}
       </main>
     </div>
   ) : (
